@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willy's Gemma 2 AI</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #ffffff; color: #1f1f1f; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { padding: 15px 20px; font-size: 1.1rem; font-weight: 500; color: #444746; border-bottom: 1px solid #f0f0f0; background: white; z-index: 10; }
+        #chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 20px; width: 100%; box-sizing: border-box; }
+        
+        .message { max-width: 85%; margin-top: 24px; padding: 5px 0; font-size: 1.05rem; line-height: 1.6; position: relative; word-wrap: break-word; }
+        .user-msg { align-self: flex-end; text-align: right; color: #000000 !important; }
+        .ai-msg { align-self: flex-start; text-align: left; color: #1f1f1f; white-space: pre-wrap; border-top: 1px solid #f0f0f0; padding-top: 15px; width: 100%; }
+        
+        .ai-msg b { font-weight: 700; color: #000; }
+
+        .sender-name { font-size: 0.8rem; margin-bottom: 6px; color: #757575; display: block; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .user-msg .sender-name { color: #000000 !important; }
+        
+        .input-area { width: 100%; display: flex; justify-content: center; padding: 20px; background: white; position: sticky; bottom: 0; }
+        .input-wrapper { background: #f0f4f9; border-radius: 28px; padding: 5px 15px; display: flex; align-items: center; width: 100%; max-width: 700px; border: 1px solid transparent; }
+        .input-wrapper:focus-within { border-color: #000000; background: white; box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+        
+        input { flex: 1; background: transparent; border: none; outline: none; padding: 12px; font-size: 1rem; color: #1f1f1f; }
+        .icon-btn { background: none; border: none; color: #000000; cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .icon-btn:hover { background: #e0e0e0; }
+        .erase-btn { color: #ea4335; margin-right: 5px; }
+        
+        .loading { font-style: italic; opacity: 0.7; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+    </style>
+</head>
+<body>
+
+    <header>Willy's Gemma 2 AI</header>
+    <div id="chat-container"></div>
+
+    <div class="input-area">
+        <div class="input-wrapper">
+            <button class="icon-btn erase-btn" onclick="clearChat()" title="Clear Chat">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"></path></svg>
+            </button>
+            <input type="text" id="userInput" placeholder="Ask Gemma 2 something...">
+            <button class="icon-btn" onclick="sendToN8N()">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Updated to use your new Cloudflare Tunnel URL
+        const CHAT_URL = 'https://str-poetry-rocks-creations.trycloudflare.com/webhook/response-node';
+        const HISTORY_URL = 'https://str-poetry-rocks-creations.trycloudflare.com/webhook/chat-history';
+
+        function formatMarkdown(text) {
+            if (!text) return "";
+            return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        }
+
+        function clearChat() {
+            if (confirm("Clear history?")) {
+                document.getElementById('chat-container').innerHTML = '';
+                appendMessage("Gemma 2", "Chat cleared.", false);
+            }
+        }
+
+        window.onload = async function() {
+            const chatContainer = document.getElementById('chat-container');
+            try {
+                const res = await fetch(HISTORY_URL);
+                if (!res.ok) throw new Error('History failed');
+                const history = await res.json();
+                chatContainer.innerHTML = ''; 
+                if (history && history.length > 0) {
+                    history.forEach(row => {
+                        const userText = row['User Message'] || row['message'];
+                        const aiText = row['AI Response'] || row['output'] || row['text'];
+                        if (userText) appendMessage("You", userText, true);
+                        if (aiText) appendMessage("Gemma 2", aiText, false);
+                    });
+                } else {
+                    appendMessage("Gemma 2", "Hi! I'm Gemma 2. Ask me anything!", false);
+                }
+            } catch (e) {
+                chatContainer.innerHTML = '';
+                appendMessage("Gemma 2", "Ready for your questions!", false);
+            }
+        };
+
+        async function sendToN8N() {
+            const inputField = document.getElementById('userInput');
+            const msg = inputField.value;
+            if (!msg.trim()) return;
+
+            appendMessage("You", msg, true);
+            inputField.value = '';
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message ai-msg loading';
+            loadingDiv.innerHTML = `<span class="sender-name">Gemma 2</span>Gemma is thinking...`;
+            document.getElementById('chat-container').appendChild(loadingDiv);
+            document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
+
+            try {
+                const response = await fetch(CHAT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                
+                const data = await response.json();
+                
+                let finalResponse = "I couldn't get a clear response.";
+                if (Array.isArray(data)) {
+                    finalResponse = data[0].output || data[0].text || data[0].message;
+                } else {
+                    finalResponse = data.output || data.text || data.response || data.message;
+                }
+
+                loadingDiv.classList.remove('loading');
+                loadingDiv.innerHTML = `<span class="sender-name">Gemma 2</span>${formatMarkdown(finalResponse)}`;
+            } catch (error) {
+                loadingDiv.classList.remove('loading');
+                loadingDiv.innerHTML = `<span class="sender-name">Gemma 2</span>Connection Error. The AI's 'phone line' might be offline.`;
+                console.error("Fetch Error:", error);
+            }
+            document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
+        }
+
+        function appendMessage(sender, text, isUser) {
+            const chatContainer = document.getElementById('chat-container');
+            const div = document.createElement('div');
+            div.className = `message ${isUser ? 'user-msg' : 'ai-msg'}`;
+            div.innerHTML = `<span class="sender-name">${sender}</span>${formatMarkdown(text)}`;
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendToN8N(); });
+    </script>
+</body>
+</html>

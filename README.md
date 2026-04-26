@@ -1,9 +1,9 @@
-# 🤖 MoAI Hub — Willy's Multimodal AI Assistant
+# MoAI Hub — Willy's Multimodal AI Assistant
 This is my project exploring the world of **AI Orchestration** using **n8n**, **Docker**, and **Ollama**. It features a custom-built web interface — **MoAI Hub** — that can not only chat but also **see and analyze images** using local AI models running on my own Apple Silicon hardware.
 
 ---
 
-## 🚀 How it Works
+## How it Works
 
 1. **Frontend:** A modern, cinematic HTML/CSS/JS interface featuring a dramatic intro screen, bubble-style chat, image upload support, prompt chips, typing indicators, and a separate idea submission form.
 2. **Backend:** An [n8n](https://n8n.io/) workflow that acts as a traffic controller.
@@ -16,7 +16,7 @@ This is my project exploring the world of **AI Orchestration** using **n8n**, **
 
 ---
 
-## ⚠️ Requirements for Live Demo
+## Requirements for Live Demo
 
 Because this project is hosted on a local machine rather than a 24/7 cloud server, the following must be true for the AI to respond:
 
@@ -29,7 +29,7 @@ Because this project is hosted on a local machine rather than a 24/7 cloud serve
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - **Cinematic Intro** — Letterbox bars, logo reveal, light sweep, and wipe-in title animation on load.
 - **Launcher Screen** — Animated entry screen to choose between the AI chat or the submission form.
@@ -47,7 +47,7 @@ Because this project is hosted on a local machine rather than a 24/7 cloud serve
 
 ---
 
-## 🛠️ Tools Used
+## Tools Used
 
 | Tool | Purpose |
 |---|---|
@@ -57,19 +57,18 @@ Because this project is hosted on a local machine rather than a 24/7 cloud serve
 | **Cloudflare** | Secure tunneling to expose local webhooks to the internet |
 | **Google Sheets API** | Logging user idea submissions |
 | **Claude (Anthropic)** | AI assistant used during development for code review, debugging, and feature implementation |
-| **Gemini (Google)** | Used for research and model comparison during development |
+| **Gemini (Google)** | Used for research, model comparison, and website construction during development |
 | **marked.js** | Markdown parsing for AI response rendering in the frontend |
 
 ---
 
-## 📝 Reflections & Evolution
+## Reflections & Evolution
 
 This project evolved from a simple text bot into a polished multimodal AI hub. Key learnings include:
 
 - **Binary Data Handling:** Learning how to pass base64-encoded image files from a browser through a webhook into a vision AI model via direct Ollama API calls.
 - **Conditional Logic:** Implementing If Nodes in n8n to route requests to the correct AI model based on input type.
 - **Webhook Architecture:** Understanding the difference between test and production webhooks, HTTP methods, and the "Respond to Webhook" node pattern in n8n.
-- **UI/UX Design:** Building a cinematic, modern chat interface with animations, image previews, typing indicators, prompt chips, and a full submission flow.
 - **Multimodal Orchestration:** Coordinating two specialized local models (text + vision) to work as one seamless assistant.
 - **Model Selection:** Evaluating local LLMs for the balance between speed and quality on Apple Silicon hardware, ultimately landing on Qwen 2.5 7b and LLaVA 7b.
 - **Debugging:** Tracing data flow through n8n execution logs to identify field name mismatches, misconfigured webhook response modes, and Docker networking issues.

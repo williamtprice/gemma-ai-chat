@@ -441,7 +441,6 @@ Required services:
 
 This project helped me learn:
 
-- how to build a custom AI frontend
 - how to use n8n webhooks
 - how to connect a website to a local backend
 - how to run local AI models with Ollama

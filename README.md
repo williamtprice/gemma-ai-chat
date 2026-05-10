@@ -1,49 +1,60 @@
 # MoAI Hub — Willy's Multimodal AI Assistant
-This is my project exploring the world of **AI Orchestration** using **n8n**, **Docker**, and **Ollama**. It features a custom-built web interface — **MoAI Hub** — that can not only chat but also **see and analyze images** using local AI models running on my own Apple Silicon hardware.
+
+MoAI Hub is my project exploring the world of **AI orchestration** using **n8n**, **Docker**, and **Ollama**.
+
+It features a custom-built web interface that can chat, route requests through an n8n workflow, and analyze images using local AI models running on my own Apple Silicon hardware.
 
 ---
 
-## How it Works
+## How It Works
 
-1. **Frontend:** A modern, cinematic HTML/CSS/JS interface featuring a dramatic intro screen, bubble-style chat, image upload support, prompt chips, typing indicators, and a separate idea submission form.
-2. **Backend:** An [n8n](https://n8n.io/) workflow that acts as a traffic controller.
-3. **Logic Gate:** The system automatically detects if an image is present.
-   - **Text only?** Routes the request to **Qwen 2.5 7b** for intelligent conversation.
-   - **Image included?** Routes the request to **LLaVA 7b** via a direct Ollama API call for visual analysis.
-4. **Brain:** Both models run locally via Ollama on an Apple M3 Mac with 16GB unified memory.
-5. **Submissions:** A dedicated form lets users submit ideas and improvements, which are logged directly to **Google Sheets** via n8n.
-6. **Connection:** A Cloudflare Tunnel creates a secure bridge between the public internet and the local machine.
+1. **Frontend:** A custom HTML/CSS/JavaScript interface with a cinematic intro, chat UI, image upload support, prompt chips, typing indicators, saved conversations, and an admin/status page.
+
+2. **Local Server:** A Node.js server connects the frontend to n8n, manages saved conversations, handles file context, and keeps private settings out of the browser.
+
+3. **Backend Workflow:** An n8n workflow acts as the traffic controller for incoming requests.
+
+4. **Routing Logic:** The system can route requests based on the selected mode and input type.
+   - **Fast mode:** Optimized for quicker everyday responses.
+   - **Deep mode:** Used for more thoughtful answers.
+   - **Image mode:** Sends image-based prompts to a vision-capable local model.
+
+5. **Local AI Models:** Models run locally through Ollama on an Apple M3 Mac with 16GB unified memory.
+
+6. **Admin Page:** A local status page checks whether MoAI, n8n, and Ollama are online.
 
 ---
 
-## Requirements for Live Demo
+## Requirements for Local Demo
 
-Because this project is hosted on a local machine rather than a 24/7 cloud server, the following must be true for the AI to respond:
+Because this project runs locally instead of on a 24/7 cloud server, the following must be running for the AI to respond:
 
-* **Power:** My Mac must be turned on and awake.
-* **The "Bridge":** The Cloudflare Tunnel terminal must be active.
-* **The "Engine":** Docker and n8n must be running the published workflow.
-* **The "Brains":** Ollama must be serving both Qwen 2.5 7b and LLaVA 7b.
+- **MoAI Server:** The local Node.js server must be running.
+- **n8n:** Docker and the published n8n workflow must be active.
+- **Ollama:** Ollama must be running with the required local models installed.
+- **Browser:** Open the app at `http://localhost:3000`.
 
-*Note: If you get a "Connection Error," it likely means the local server is currently offline!*
+If you get a connection error, one of the local services is probably offline.
 
 ---
 
 ## Key Features
 
-- **Cinematic Intro** — Letterbox bars, logo reveal, light sweep, and wipe-in title animation on load.
-- **Launcher Screen** — Animated entry screen to choose between the AI chat or the submission form.
-- **Multimodal Chat** — Supports both text conversations and image analysis in the same interface.
-- **Image Upload** — Attach photos directly in the chat; the system automatically routes to the vision model.
+- **Cinematic Intro** — Animated intro screen with logo reveal and title transition.
+- **Launcher Screen** — Entry screen for opening the assistant experience.
+- **Multimodal Chat** — Supports both normal text chat and image-based prompts.
+- **Image Upload** — Attach images directly in the chat.
+- **Mode Buttons** — Switch between Fast, Deep, and Image modes.
+- **Saved Conversations** — Sidebar for returning to previous chats.
 - **Prompt Chips** — Quick-start suggestion buttons on the welcome screen.
-- **Typing Indicator** — Animated bouncing dots while the AI is thinking.
-- **Timestamps** — Every message shows the time it was sent.
-- **Markdown Rendering** — AI responses support bold, lists, and code blocks via marked.js.
-- **Idea Submission Form** — Users can submit ideas and improvements which are saved to Google Sheets.
-- **Toast Notifications** — Subtle slide-up confirmation after a successful submission.
-- **Character Counter** — Live counter on the submission textarea with color warnings.
-- **Mobile Responsive** — Fully adapted layout for phones and tablets.
-- **Smooth Scroll & Animations** — Polished transitions throughout the UI.
+- **Thinking States** — Shows what the assistant is doing while processing.
+- **Streaming-Style Responses** — Responses appear in a smoother, more active way.
+- **Timestamps** — Messages show when they were sent.
+- **Markdown Rendering** — AI responses support bold text, lists, and code blocks.
+- **File Uploads** — Supports text-based files like TXT, MD, CSV, and JSON.
+- **Admin/Status Page** — Shows whether MoAI, n8n, and Ollama are online.
+- **Mobile Responsive** — Layout adapts for phones and tablets.
+- **Smooth Animations** — Polished transitions throughout the interface.
 
 ---
 
@@ -51,24 +62,30 @@ Because this project is hosted on a local machine rather than a 24/7 cloud serve
 
 | Tool | Purpose |
 |---|---|
-| **n8n** | AI orchestration, webhook handling, and conditional routing (If/Else logic) |
-| **Ollama** | Running **Qwen 2.5 7b** (text) and **LLaVA 7b** (vision) locally |
-| **Docker** | Containerization for the n8n environment |
-| **Cloudflare** | Secure tunneling to expose local webhooks to the internet |
-| **Google Sheets API** | Logging user idea submissions |
-| **Claude (Anthropic)** | AI assistant used during development for code review, debugging, and feature implementation |
-| **Gemini (Google)** | Used for research, model comparison, and website construction during development |
-| **marked.js** | Markdown parsing for AI response rendering in the frontend |
+| **n8n** | AI orchestration, webhook handling, and conditional routing |
+| **Ollama** | Running local AI models |
+| **Docker** | Running the local n8n environment |
+| **Node.js** | Local server between the frontend and n8n |
+| **HTML/CSS/JavaScript** | Custom frontend interface |
+| **marked.js** | Markdown rendering for AI responses |
+| **Claude** | Used during development for planning, debugging, and code review |
+| **Gemini** | Used during development for research and model comparison |
+| **Codex** | Used during development for implementation, cleanup, and debugging |
 
 ---
 
 ## Reflections & Evolution
 
-This project evolved from a simple text bot into a polished multimodal AI hub. Key learnings include:
+This project started as a simple AI chatbot and slowly turned into a local multimodal AI hub.
 
-- **Binary Data Handling:** Learning how to pass base64-encoded image files from a browser through a webhook into a vision AI model via direct Ollama API calls.
-- **Conditional Logic:** Implementing If Nodes in n8n to route requests to the correct AI model based on input type.
-- **Webhook Architecture:** Understanding the difference between test and production webhooks, HTTP methods, and the "Respond to Webhook" node pattern in n8n.
-- **Multimodal Orchestration:** Coordinating two specialized local models (text + vision) to work as one seamless assistant.
-- **Model Selection:** Evaluating local LLMs for the balance between speed and quality on Apple Silicon hardware, ultimately landing on Qwen 2.5 7b and LLaVA 7b.
-- **Debugging:** Tracing data flow through n8n execution logs to identify field name mismatches, misconfigured webhook response modes, and Docker networking issues.
+Some of the biggest things I learned were:
+
+- **AI Orchestration:** Using n8n to connect different parts of an AI system together.
+- **Webhook Architecture:** Understanding test vs production webhooks, HTTP methods, and response nodes.
+- **Local AI Models:** Running models locally through Ollama instead of depending only on cloud AI tools.
+- **Multimodal Inputs:** Sending both text and images through the same assistant interface.
+- **Conditional Routing:** Using n8n logic to send different kinds of requests to different AI paths.
+- **Debugging Local Services:** Troubleshooting Node.js, Docker, n8n, Ollama, browser errors, and networking issues.
+- **Project Cleanup:** Learning how important folder structure and simple setup instructions are once a project grows.
+
+MoAI Hub became a hands-on way for me to learn how modern AI apps are actually connected behind the scenes.

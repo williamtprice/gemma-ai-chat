@@ -1,0 +1,16 @@
+{
+  "name": "moai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MoAI local app server and frontend",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "start-all": "./scripts/start.sh",
+    "stop-all": "./scripts/stop.sh"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

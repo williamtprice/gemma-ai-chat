@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoAI Status</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --panel-2: #111119;
+      --text: #f4f0e8;
+      --muted: #a29f98;
+      --border: #2b3038;
+      --accent: #8fa386;
+      --gold: #c9c1ad;
+      --ok: #4caf50;
+      --bad: #b46b63;
+      --warn: #b8ad91;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px),
+        radial-gradient(circle at 30% 10%, rgba(81,96,106,0.08), transparent 30%),
+        radial-gradient(circle at 78% 75%, rgba(143,163,134,0.06), transparent 28%),
+        var(--bg);
+      background-size: 42px 42px, 42px 42px, auto, auto, auto;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      height: 70px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: rgba(12,12,16,0.88);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.7rem;
+    }
+    .brand img { width: 34px; height: 34px; object-fit: contain; }
+
+    main {
+      width: min(1050px, calc(100% - 32px));
+      margin: 32px auto;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-end;
+      margin-bottom: 22px;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: 2rem;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+    .subtext {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .actions { display: flex; gap: 10px; align-items: center; }
+    button, a.button {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+    }
+    button.primary {
+      border-color: rgba(143,163,134,0.34);
+      background: rgba(143,163,134,0.08);
+      color: var(--accent);
+    }
+    button:disabled { opacity: 0.55; cursor: wait; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .metric, .service {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 1.35rem;
+      font-weight: 650;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .service-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .service h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warn);
+    }
+    .ok .dot { background: var(--ok); }
+    .bad .dot { background: var(--bad); }
+    .ok { color: #b7f0bc; border-color: rgba(76,175,80,0.35); }
+    .bad { color: #ffc2c2; border-color: rgba(255,92,92,0.35); }
+
+    dl {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 8px 12px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    dt { color: #cfcfcf; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+
+    .empty {
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 22px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.02);
+    }
+
+    @media (max-width: 760px) {
+      header { padding: 0 16px; }
+      main { margin: 22px auto; }
+      .topline { align-items: stretch; flex-direction: column; }
+      .actions { justify-content: flex-start; flex-wrap: wrap; }
+      .summary, .services { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="moai-logo.svg" alt="MoAI">
+      <span>MoAI</span>
+    </div>
+    <a class="button" href="/">Open MoAI</a>
+  </header>
+
+  <main>
+    <section class="topline">
+      <div>
+        <h1>System Status</h1>
+        <p class="subtext">Live health checks for MoAI, n8n, and Ollama.</p>
+      </div>
+      <div class="actions">
+        <button class="primary" id="refreshBtn">Refresh Status</button>
+      </div>
+    </section>
+
+    <section class="summary">
+      <div class="metric">
+        <div class="metric-label">Overall</div>
+        <div class="metric-value" id="overall">Checking</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Last Checked</div>
+        <div class="metric-value" id="checkedAt">--</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Services Online</div>
+        <div class="metric-value" id="onlineCount">--</div>
+      </div>
+    </section>
+
+    <section class="services" id="services">
+      <div class="empty">Checking services...</div>
+    </section>
+  </main>
+
+  <script>
+    const servicesEl = document.getElementById('services');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const overallEl = document.getElementById('overall');
+    const checkedAtEl = document.getElementById('checkedAt');
+    const onlineCountEl = document.getElementById('onlineCount');
+
+    function formatTime(value) {
+      if (!value) return '--';
+      return new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function renderService(service) {
+      const stateClass = service.ok ? 'ok' : 'bad';
+      const stateText = service.ok ? 'Online' : 'Offline';
+      return `
+        <article class="service">
+          <div class="service-head">
+            <h2>${service.name}</h2>
+            <span class="pill ${stateClass}"><span class="dot"></span>${stateText}</span>
+          </div>
+          <dl>
+            <dt>Status</dt>
+            <dd>${service.status ?? '--'}</dd>
+            <dt>Latency</dt>
+            <dd>${service.latencyMs ?? '--'} ms</dd>
+            <dt>URL</dt>
+            <dd>${service.url || '--'}</dd>
+            ${service.error ? `<dt>Error</dt><dd>${service.error}</dd>` : ''}
+          </dl>
+        </article>
+      `;
+    }
+
+    async function loadStatus() {
+      refreshBtn.disabled = true;
+      servicesEl.innerHTML = '<div class="empty">Checking services...</div>';
+
+      try {
+        const res = await fetch('/api/status');
+        if (!res.ok) throw new Error('Status request failed.');
+        const data = await res.json();
+        const services = data.services || [];
+        const online = services.filter(service => service.ok).length;
+        const allOnline = services.length > 0 && online === services.length;
+
+        overallEl.textContent = allOnline ? 'Online' : 'Needs Attention';
+        checkedAtEl.textContent = formatTime(data.checkedAt);
+        onlineCountEl.textContent = `${online} / ${services.length}`;
+        servicesEl.innerHTML = services.map(renderService).join('');
+      } catch (error) {
+        overallEl.textContent = 'Needs Attention';
+        checkedAtEl.textContent = '--';
+        onlineCountEl.textContent = '--';
+        servicesEl.innerHTML = `<div class="empty">${error.message}</div>`;
+      } finally {
+        refreshBtn.disabled = false;
+      }
+    }
+
+    refreshBtn.addEventListener('click', loadStatus);
+    loadStatus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+[
+  {
+    "id": "c02d85a7-6920-464f-a953-e69de9ff008c",
+    "title": "Give me a fun fact",
+    "createdAt": "2026-05-08T19:40:57.159Z",
+    "updatedAt": "2026-05-08T19:41:02.536Z",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Give me a fun fact",
+        "hasImage": false,
+        "fileNames": [],
+        "mode": "fast",
+        "createdAt": "2026-05-08T19:40:57.198Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Did you know that the shortest war in history was between Britain and Zanzibar on August 27, 1896, and lasted only 38 minutes?",
+        "createdAt": "2026-05-08T19:41:02.533Z"
+      }
+    ]
+  },
+  {
+    "id": "e32e6a16-8330-40f7-9e25-b2ae4ebd21e7",
+    "title": "Give me a fun fact",
+    "createdAt": "2026-05-09T06:45:18.208Z",
+    "updatedAt": "2026-05-09T06:45:50.770Z",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Give me a fun fact",
+        "hasImage": false,
+        "fileNames": [],
+        "mode": "fast",
+        "createdAt": "2026-05-09T06:45:18.222Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Cats have 32 muscles in each ear.",
+        "createdAt": "2026-05-09T06:45:21.084Z"
+      },
+      {
+        "role": "user",
+        "content": "WOAH!",
+        "hasImage": false,
+        "fileNames": [],
+        "mode": "fast",
+        "createdAt": "2026-05-09T06:45:30.548Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Sorry, didn't catch that. Can I help with something?",
+        "createdAt": "2026-05-09T06:45:33.419Z"
+      },
+      {
+        "role": "user",
+        "content": "nah i was saying woah thats a lot!",
+        "hasImage": false,
+        "fileNames": [],
+        "mode": "fast",
+        "createdAt": "2026-05-09T06:45:48.278Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Yeah, 32 ears would hear a lot!",
+        "createdAt": "2026-05-09T06:45:50.766Z"
+      }
+    ]
+  },
+  {
+    "id": "ba01d330-6aa2-4eba-a155-e24c18692d67",
+    "title": "Give me a useful fact",
+    "createdAt": "2026-05-09T07:02:30.345Z",
+    "updatedAt": "2026-05-09T07:02:44.990Z",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Give me a useful fact",
+        "hasImage": false,
+        "fileNames": [],
+        "mode": "fast",
+        "createdAt": "2026-05-09T07:02:30.352Z"
+      },
+      {
+        "role": "assistant",
+        "content": "Water makes up 60% of the human body.",
+        "createdAt": "2026-05-09T07:02:44.986Z"
+      }
+    ]
+  }
+]
